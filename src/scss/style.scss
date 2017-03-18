@@ -1,0 +1,20 @@
+@import '_mixin.scss';
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+$title: 'Avenir-Heavy';
+$text: 'LitteraPlainLight';
+
+body {
+	background: #222;
+	color: #fff;
+	font-family: $text;
+}
+
+// @include adaptive('s') {}
+// @include font-responsive(24px, 38px, 420px, 1100px);
+// 

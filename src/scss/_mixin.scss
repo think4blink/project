@@ -1,0 +1,72 @@
+// POINTS
+
+$breakpoints: (
+	'mobile': (max-width: 479px),
+	'laptop': (min-width: 767px),
+	'desktop': (min-width:  992px),
+	'wide': (min-width: 1200px)
+) !default;
+
+@mixin adaptive($breakpoint) {
+// If the key exists in the map
+	@if map-has-key($breakpoints, $breakpoint) {
+		// Prints a media query based on the value
+		@media #{inspect(map-get($breakpoints, $breakpoint))} {
+			@content;
+		}
+	}
+
+// If the key doesn't exist in the map
+	@else {
+		@warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+		+ "Available breakpoints are: #{map-keys($breakpoints)}.";
+	}
+}
+
+
+// SUPER FONT SIZE
+
+// Strip Unit from Value
+@function strip-unit($n) {
+	@return $n / ($n * 0 + 1);
+}
+
+// Convert px to rem
+@function pxtorem($n, $root: 16px) {
+	@return (strip-unit($n) / strip-unit($root)) * 1rem;
+}
+
+// Responsive Typography Mixin
+@mixin font-responsive($min-size: 12px, $max-size: 21px, $min-width: 767px, $max-width: 1100px, $root-size: 16px) {
+		
+	$size-unit: unit($min-size);
+	$max-size-unit: unit($max-size);
+	$width-unit: unit($min-width);
+	$max-width-unit: unit($max-width);
+
+	@if (($size-unit != $max-size-unit) or ($width-unit != $max-width-unit)) {
+		@error 'min/max unit types must match';
+	}
+
+	@if ($size-unit == rem and $width-unit == px) {
+		$min-width: pxtorem($min-width, $root-size);
+		$max-width: pxtorem($max-width, $root-size);
+	} @elseif ($size-unit != $width-unit and ($size-unit != rem or $width-unit != em)) {
+		@error 'this combination of units is not supported';
+	}
+
+	$size-diff: strip-unit($max-size) - strip-unit($min-size);
+	$width-diff: strip-unit($max-width) - strip-unit($min-width);
+
+	$calculated: "#{$min-size} + #{$size-diff} " + "* ((100vw - #{$min-width}) / #{$width-diff})";
+
+	font-size: calc(#{unquote($calculated)});
+
+	@media only screen and (max-width: $min-width) {
+		font-size: $min-size;
+	}
+
+	@media only screen and (min-width: $max-width) {
+		font-size: $max-size;
+	}
+}
