@@ -18,3 +18,7 @@ body {
 // @include adaptive('s') {}
 // @include font-responsive(24px, 38px, 420px, 1100px);
 // 
+
+h1 {
+	@include font-responsive(14px, 38px);
+}
