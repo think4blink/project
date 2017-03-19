@@ -7,7 +7,8 @@
 }
 
 $title: 'Avenir-Heavy';
-$text: 'LitteraPlainLight';
+$text: 'LitteraPlainRegular';
+$text-white: #fff;
 
 body {
 	background: #222;
@@ -20,5 +21,70 @@ body {
 // 
 
 h1 {
-	@include font-responsive(14px, 38px);
+	@include font-responsive(24px, 38px);
+}
+
+a {
+	text-decoration: none;
+}
+
+@mixin flexbox() {
+
+}
+
+.flexbox {
+	display: flex;
+}
+
+@mixin hover-element() {
+	&:not([class*="active"])::after {
+		content: '';
+		position: absolute;
+		top: 0; right: 0; bottom: 0; left: 0;
+		background: linear-gradient(
+			180deg, 
+			rgba(0,0,0, .5),
+			rgba(0,0,0, .2)
+		);
+		z-index: -1;
+		transition: .6s ease-in-out;
+		opacity: 0;
+	}
+	&:not([class*="active"]):hover::after { opacity: .5 }
+}
+// menu
+.menu_box {
+	background: linear-gradient(180deg, rgba(0,0,0, .1), rgba(0,0,0, .5));
+
+	&-inner {
+		@extend .flexbox;
+		// background: maroon;
+	}
+	&-item {
+		position: relative;
+
+		&:not(:last-child) {
+			border-right: 1px solid rgba(255,255,255, .5);
+		}
+		&-link {
+			@include font-responsive(18px, 24px);
+			font-family: $text;
+			color: #666;
+			text-shadow: 
+				-1px -1px 1px rgba(0,0,0, 1),
+				1px 1px 1px rgba(0,0,0, .1);
+			transition: .4s ease-in-out;
+			padding: 10px 20px;
+			display: block;
+
+			@include hover-element();
+
+			&:not([class*="active"]):hover {
+				color: $text-white;
+			}
+		}
+		.--active {
+			color: $text-white;
+		}
+	}
 }

@@ -8,23 +8,33 @@ var rimraf = require('rimraf'); // ебенит всё к хуям
 var plumber = require('gulp-plumber'); // чтоб галп не вылетал
 var browserSync = require('browser-sync'); // недосервер
 var reload = browserSync.reload;
+var defaultFile = '404.html';
 
 var config = {
-   server: {
-      baseDir: './dist/',
-      index : 'index.html'
-   },
-   tunnel: false,
-   host: 'localhost',
-   port: 9000,
-   logPrefix: 'Artemiy!'
+	server: {
+		baseDir: './dist/',
+		index : 'index.html'
+	},
+	tunnel: false,
+	host: 'localhost',
+	port: 9000,
+	logPrefix: 'Artemiy!'
 };
+var redirect = function (err, bs) {
+	bs.addMiddleware("*", function (req, res) {
+		res.writeHead(302, {
+			"location": "404.html"
+		});
+		res.end("Redirecting!");
+	});
+}
+
 gulp.task('webserver', function () {
-	browserSync(config);
+	browserSync(config, redirect);
 });
 
 gulp.task('clean', function (cb) {
-    rimraf('./dist/', cb);
+	rimraf('./dist/', cb);
 });
 
 gulp.task('sass', function() {
